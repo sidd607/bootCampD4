@@ -1,10 +1,12 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -83,12 +85,46 @@ public class StudentMarksRelation {
 				}
 			}
 		}
-		
-		this.studentGraph.forEach((key, val)->{
-			System.out.println(key + "--->" + val.size());
-			val.forEach(value->System.out.println(value));
-		});
 	}
+	
+	public void createSet() {
+		Set<String> studentSet = new HashSet<>();
+		studentGraph.forEach((key, val) ->{
+			val.forEach(student -> {
+				studentSet.add(key + ":" + student);
+			});
+		});
+		
+		Set<String> newSet = new HashSet<>();
+		newSet.addAll(studentSet);
+		System.out.println(newSet.size());
+		newSet.forEach(val->System.out.println(val));
+		
+		for(String keya: studentSet) {
+			for (String keyb: studentSet) {
+				
+				String tmpa = keya.split(":")[0];
+				String tmpb = keyb.split(":")[1];
+				String tmpc = keya.split(":")[1];
+				String tmpd = keyb.split(":")[0];
+				System.out.println(tmpc + " | " + tmpd + " | " + tmpc.equals(tmpd));
+				if(tmpc.equals(tmpd)) {
+					String tmp = tmpa + ":" + tmpb;
+					System.out.println(tmp + " | " + tmpa + " | " + tmpb + " | " +  keya + " | " +keyb);
+					if (newSet.contains(tmp) && !tmp.equals(keya) && !tmp.equals(keyb) && !keya.equals(keyb)){
+						System.out.println("Removing -> " + tmp);
+						newSet.remove(tmp);
+					}
+				}
+			}
+		}
+		
+		for (String key: newSet) {
+			System.out.println(key);
+		}
+		
+	}
+	
 	public void topologicalSort()
     {
 		int V = studentGraph.keySet().size();
@@ -159,8 +195,8 @@ public class StudentMarksRelation {
 		
 		StudentMarksRelation studentMarksRelation = new StudentMarksRelation(students);
 		studentMarksRelation.createStudentGraph();
-		
-		studentMarksRelation.topologicalSort();
+		studentMarksRelation.createSet();
+		//studentMarksRelation.topologicalSort();
 		
 		
 		
